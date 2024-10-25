@@ -20,7 +20,7 @@ SENDER_EMAIL = os.getenv('SENDER_EMAIL')
 SENDER_PASSWORD = os.getenv('SENDER_PASSWORD')
 RECEIVER_EMAIL = os.getenv('RECEIVER_EMAIL')
 DEBUG = False
-REQUEST_INTERVAL = 60
+REQUEST_INTERVAL = 3600 # 1 hour
 
 # Print out the environment variables to debug
 if DEBUG:
@@ -103,16 +103,17 @@ def check_for_new_auctions(auction_names):
         if auction_name not in MEMORY_LIST:
             print(f"New auction found: {auction_name}")
             # add the auction name to MEMORY_LIST
-            MEMORY_LIST.append(auction_name)
-            write_to_file(MEMORY_LIST_FILE, '\n'.join(MEMORY_LIST))
-            send_email(f"New auction found: {auction_name}", f"New auction found: {auction_name}")
+            if send_email(f"New auction found: {auction_name}", f"New auction found: {auction_name}"):
+                MEMORY_LIST.append(auction_name)
+                write_to_file(MEMORY_LIST_FILE, '\n'.join(MEMORY_LIST))
 
 # main function
 def main():
     while True:
         auction_names = get_auction_names(URL)
-        print(f"Found {len(auction_names)} auction names")
-        print(auction_names)
+        if DEBUG:   
+            print(f"Found {len(auction_names)} auction names")
+            print(auction_names)
         check_for_new_auctions(auction_names)
         time.sleep(REQUEST_INTERVAL)
 
