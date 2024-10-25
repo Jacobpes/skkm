@@ -1,4 +1,4 @@
-## Automated agent for giving notifications for ending auctions at skkm.fi
+## Automated agent for giving notifications for new or ending auctions at skkm.fi
 
 ### How to use
 
